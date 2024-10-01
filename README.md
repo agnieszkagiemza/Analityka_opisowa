@@ -1,1 +1,1 @@
-# Analityka_opisowa
+Folfer zawiera materiały na zajęcia laboratoryjne z przedmiotu Analityka Opisowa
