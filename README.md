@@ -1,1 +1,1 @@
-Folfer zawiera materiały na zajęcia laboratoryjne z przedmiotu Analityka Opisowa
+Folder zawiera materiały na zajęcia laboratoryjne z przedmiotu Analityka Opisowa
