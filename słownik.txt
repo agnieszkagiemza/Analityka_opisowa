@@ -1,0 +1,34 @@
+# Definiujemy słownik marek i modeli
+car_dict = {
+    'Audi': ['Q3', 'A5'],
+    'BMW': ['Seria 5', 'Seria 3', 'Seria 1'],
+    'Chevrolet': ['Captiva'],
+    'DS': ['7'],
+    'Fiat': ['Punto'],
+    'Ford': ['Focus'],
+    'Hyundai': ['ix35', 'i30'],
+    'Land Rover': ['Range Rover'],
+    'Mercedes-Benz': ['SL', 'Klasa V', 'Klasa S', 'Klasa E', 'Klasa C', 'Klasa A', 'GLC', 'CLS'],
+    'Opel': ['Zafira', 'Insignia', 'Corsa', 'Astra'],
+    'Renault': ['Megane'],
+    'Seat': ['Alhambra'],
+    'Smart': ['Fortwo'],
+    'Subaru': ['Forester'],
+    'Toyota': ['Proace', 'Corolla', 'Auris'],
+    'Volkswagen': ['Tiguan', 'Phaeton', 'Passat', 'Golf'],
+    'Volvo': ['XC 90']
+}
+
+# Tworzymy kolumny 'marka' i 'model'
+df['marka'] = None
+df['model'] = None
+
+# Przechodzimy przez każdy wiersz w ramce danych
+for index, row in df.iterrows():
+    for marka, modele in car_dict.items():
+        for model in modele:
+            # Sprawdzamy, czy nazwa zawiera markę i model
+            if marka in row['Nazwa'] and model in row['Nazwa']:
+                df.at[index, 'marka'] = marka
+                df.at[index, 'model'] = model
+                break  # Przerywamy wewnętrzną pętlę, gdy znajdziemy markę i model
