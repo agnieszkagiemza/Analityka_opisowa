@@ -18,6 +18,6 @@ Zajęcia w dniach :
 
 -16.10.2024 środa -
 
--30.10.2024 środą  - 
+-30.10.2024 środa
 
 nie odbędą się w w.w. terminie i będą musiały być odrobione.
