@@ -4,7 +4,7 @@ Sprawy organizacyjne prowadzący Agnieszka Giemza:
 
 Zajęcia w dniach :
 
--16.10.2024 środa - odbrabiamy (10.10.2024 o 19 - odrobione)
+-16.10.2024 środa - odbrabiamy (10.10.2024 o 19) - [odrobione]
 
 -23.10.2024 środa i 30.10.2024 środa - obrabiamy (poniedziałek 21.10. o godz 15:45- 2 zajęcia pod rząd) 
 
