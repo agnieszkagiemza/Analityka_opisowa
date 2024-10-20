@@ -1,0 +1,257 @@
+---
+title: "Laboratorium nr 3- 10.10.2024"
+output: html_notebook
+---
+
+# Zadania do wykonania
+
+Zanim zaczniemy należy się upewnić czy mamy prawidłowo określoną lokalizację plików, które chcemy wczytać. Służy temu komenda
+
+``` r
+getwd()# do sprawdzenia lokalizacji
+setwd()# do określenia lokalizacji
+```
+
+Dobrym sposobem jest także utworzeniu projektu z lokalizacją w folderze. Wtedy lokalizacje pliku sa automatycznie w tym folderze. Bardzo przydatne, jeżeli kilka osób pracuje nad jednym projektem.
+
+## 1. Wczytaj dane
+
+Wczytuję ramki danych. Jeżeli pliki mamy w danycj projekcie to wystarczy na danych plik najechać i wtedy bezpośrednio wczytać. Program dobierze nam odpowiednie biblioteki i funkcje w zależności od rozszerzenia pliku.
+
+-   pierwszy zbiór
+
+```{r}
+library(readr)
+Regiony <- read_delim("Z3_Regiony.csv",      delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+-   drugi zbiór
+
+```{r}
+library(readxl)
+Baza <- read_excel("Z3_BAZA.xlsx")
+```
+
+-   ostatni zbiór
+
+    ```{r}
+    Nazwy = as.data.frame(read_excel("Z3_BAZA.xlsx", sheet = 'Nazwy_firm'))
+    ```
+
+## 2. Do ramki danych Baza dodaj nową kolumnę „Branża", która będzie zawierała informację o branży, w której działa każda firma.
+
+Informacja ta jest już zawarta w ramce danych i powinna zaczynać się od dużej litery.
+
+Spróbujmy wyciągnąć branże z nazwy firmy
+
+```{r}
+Baza$Branza <- sub(".*B_(.*)", "\\1", Baza$Numer_firmy)
+```
+
+Funkcja sub działa na trzech parametrach sub( wzorzec, zamiana, wektor).
+
+W naszym przypadku wzorzec *".B\_(.)"* odpowiada za:
+
+-   `.*`: Dopasowuje dowolny ciąg znaków przed wystąpieniem ciągu "B\_".
+
+-   `B_`: Literalny ciąg znaków, którego szukamy ("B\_").
+
+-   `(.*)`: Zapisuje wszystko, co znajduje się po "B\_", jako tzw. grupę przechwytywania.
+
+Zamiana: `"\\1"` odnosi się do pierwszej grupy przechwytywania, czyli części po "B\_".
+
+Czyli Funkcja znajduje w kolumnie `Numer_firmy` ciąg znaków zaczynający się od "B\_", a następnie zwraca wszystko, co znajduje się po tym ciągu, usuwając część przed "B\_".
+
+Zanim przejdziemy dalej sprawdźmy czy nazwy branż są prawidłowe.
+
+```{r}
+unique(Baza$Branza)
+```
+
+Łatwo widać, ze mamy jakieś literówki. Zatem musimy te zmienne ujednolicić.
+
+Musimy najpierw zdiagnowawać jakiego typu są to literówki i na jaki wyraz chcemy zmienić. Mamy 5 zamian. Co robi to wyrażenie?
+
+1.  **Wzorzec:**
+
+    -   Wzorzec `^(...)$` opisuje różne potencjalne błędne wersje słowa "Finance", które mogą występować w danych.
+
+    -   `^` oznacza początek ciągu, a `$` oznacza koniec, co sprawia, że dopasowanie musi obejmować cały ciąg.
+
+    -   W nawiasach znajduje się lista możliwych literówek (np. "Fcnance", "Finajce", "Finanqe" itd.).
+
+2.  **Zamiana:**
+
+    -   Wszystkie ciągi, które pasują do jednej z tych literówek, zostaną zamienione na poprawną wersję, czyli `"Finance"` dla pierwszej zamiany
+
+```{r}
+library(dplyr)
+
+Baza$Branza <- gsub("^(Fcnance|Finajce|Finanqe|Finaoce|Finvnce|Fibance|Finabce|Finagce|Finakce|Finalce|Finanbe|Financb|Finanfe|Finapce|Finarce|Finatce|Finawce|Finaxce|Findnce|Finknce|Finsnce|Fioance|Fiqance|Firance|Fisance|Fiyance|Fsnance|Funance|Fvnance|zinance|uinance|linance|qinance|iinance|binance|Figance|Filance|finance|Financh|Financr|Financy|Finanme|Finanre|Finbnce)$", "Finance", Baza$Branza)
+Baza$Branza <- gsub("^(Retail|Retial|letial|Rntail|Rntial|zetial|Rbtial|Reaial|rech|Rehial|Rekial|Remial|Reoail|Repail|Repial|Retaal|Retagl|Retaig|Retaii|Retaij|Retaim|Retain|Retaip|Retaiw|Retavl|Retawl|Reteil|Rethal|Retiaa|Retiac|Retiad|Retiag|Retiah|Retiat|Retiau|Reticl|Retiql|Retitl|Retiwl|Retlal|Retmal|Retqil|Retsal|Rettil|Retuil|hetial|Retvil|Retwal|Retzal|Rexail|Reyial|Rezial|Rhtail|Rhtial|Ritial|Rjtail|Rptial|Rqtial|Rrtial|Rwtial|Rxtail|Rztial|vetail|yetail|ketial)$", "Retail", Baza$Branza)
+Baza$Branza <- gsub("^(Eqror|Erdor|Erfor|Erior|Errir|error|Ebror|Ecror|Egror|Elror|Eraor|Erqor|Errgr|Errlr|Erroe|Erroj|Erron|Errov|Errow|Errwr|Errzr|Erwor|Erxor|krror|lrror)$", "Error", Baza$Branza)
+Baza$Branza <- gsub("^(Tecy|Tekh|Tfch|gech|hech|uech|aech|dech|Tecm|Tecp|Teih|Teth|oeoch|pech|heth|vech|iech|lech|oech|tebh|Tebh|Tecd|Txch|Tzch|Tece|tech|Teco|Tecs|Tecz|Tegh|Tenh|Teqh|Teuh|Tewh|Texh|Thch|Tich|Tnch|Toch|Trch|Ttch|Tuch)$", "Tech", Baza$Branza)
+Baza$Branza <- gsub("Tajna", "Tajna", Baza$Branza) # "Tajna" bez zmian
+
+```
+
+Sprawdźmy czy nazwy są prawidłowe.
+
+```{r}
+unique(Baza$Branza)
+```
+
+## 3. Wyciągnij numer regionu z bazy "Regiony" i dodaj jako nowa kolumne
+
+Pierwsza metoda : Prosta zamiana "Region" na pusty.
+
+```{r}
+Regiony$Numer_regionu <- as.numeric(gsub("Region ", "", Regiony$Region))
+```
+
+Druga metoda : Wyciągnięcie bezpośrednio cyfr dowolnej długości za pomocą wyrażeń regularnych
+
+```{r}
+library(stringr)
+library(dplyr)
+Regiony$Numer_regionu<-str_extract(Regiony$Region, "\\d+") %>% as.numeric()
+```
+
+## 4.Dołącz populację i PKB do bazy "Nazwy"
+
+```{r}
+Nazwy <- merge(Nazwy, Regiony[, c("Numer_regionu", "Populacja", "PKB_regionu")], by.x = "Id_regionu", by.y = "Numer_regionu", all.x = TRUE)
+```
+
+**1. Funkcja `merge()`**
+
+-   `merge()` w R służy do łączenia dwóch ramek danych na podstawie wspólnych kolumn (kluczy).
+
+2\. **Argumenty:**
+
+-   **`Nazwy`**: Pierwsza ramka danych, która będzie podstawą do łączenia.
+
+-   **`Regiony[, c("Numer_regionu", "Populacja", "PKB_regionu")]`**: Druga ramka danych. W tym przypadku wybrane są tylko trzy kolumny z ramki `Regiony`: `Numer_regionu`, `Populacja` oraz `PKB_regionu`.
+
+-   **`by.x = "Id_regionu"`**: Kolumna `Id_regionu` z ramki `Nazwy` jest używana jako klucz do łączenia danych.
+
+-   **`by.y = "Numer_regionu"`**: Kolumna `Numer_regionu` z ramki `Regiony` jest używana jako odpowiadający klucz.
+
+-   **`all.x = TRUE`**: To argument, który mówi, że chcemy zachować wszystkie wiersze z ramki `Nazwy` (lewe łączenie, ang. *left join*). Jeśli dla jakiegoś wiersza z `Nazwy` nie ma odpowiadającego wiersza w `Regiony`, wartości z brakujących kolumn będą ustawione na `NA`.
+
+Co się dzieje:
+
+-   **`merge()`** łączy ramkę `Nazwy` z ramką `Regiony` na podstawie klucza. Kolumną w `Nazwy` jest `Id_regionu`, a w `Regiony` - `Numer_regionu`.
+
+-   Wynik będzie zawierał wszystkie kolumny z ramki `Nazwy` oraz dodatkowe kolumny `Populacja` i `PKB_regionu` z ramki `Regiony`.
+
+-   Dzięki argumentowi `all.x = TRUE`, jeśli w `Regiony` nie ma odpowiedniego wiersza dla `Id_regionu` z `Nazwy`, w wynikowej ramce danych pojawią się wartości `NA` dla brakujących danych z `Regiony`.
+
+## 5.Połącz obie bazy za pomoca klucza ID_Firmy z ramki "Nazwy"
+
+```{r}
+Finalna_Baza <- merge(Baza, Nazwy, by = "ID_Firmy", all.x = TRUE)
+```
+
+## 6.Usuń błędnie wpisane wyrażenia z ramki danych( NaN, error itd.).
+
+Najpierw przeszukuję kolumnę `Przychody` i sprawdzam, gdzie wartości są równe `"error"`. Tam, gdzie znajdę takie wartości, zamieniam je na `NA` (brakujące dane).
+
+```{r}
+# Zamiana "error" na NA w kolumnie "Przychody"
+Finalna_Baza$Przychody[Finalna_Baza$Przychody == "error"] <- NA
+```
+
+Następnie w kolumnie `Koszty` sprawdzam, gdzie wartości to `NaN` (Not a Number), i zamieniam je na `NA`.
+
+```{r}
+# Zamiana "NaN" na NA w kolumnie "Koszty"
+Finalna_Baza$Koszty[is.nan(Finalna_Baza$Koszty)] <- NA
+```
+
+W tym kroku sprawdzam, które wartości w kolumnie `Przychody` są już `NA` lub nie są puste (`!= ""`), a nie są liczbą. Tam, gdzie to konieczne, przypisuję `NA`.
+
+```{r}
+# Zamiana NA w przypadku, gdy wartość nie jest liczbą
+Finalna_Baza$Przychody[is.na(Finalna_Baza$Przychody) & Finalna_Baza$Przychody != ""] <- NA
+```
+
+Robię to samo, co w przypadku kolumny `Przychody`, ale teraz dla kolumny `Koszty`. Sprawdzam, gdzie są `NA` lub inne nienumeryczne wartości i zamieniam je na `NA.`a końcu robię to samo dla kolumny `Zysk`. Sprawdzam, gdzie wartości nie są liczbami ani pustymi ciągami, i zamieniam je na `NA`, aby upewnić się, że mam poprawne dane.
+
+```{r}
+Finalna_Baza$Koszty[is.na(Finalna_Baza$Koszty) & Finalna_Baza$Koszty != ""] <- NA
+Finalna_Baza$Zysk[is.na(Finalna_Baza$Zysk) & Finalna_Baza$Zysk != ""] <- NA
+
+```
+
+Na końcu tego kroku wykonuję 3 niezbędne operacje, aby mieć możliwość policzenia statystyk
+
+```{r}
+Finalna_Baza$Przychody <- as.numeric(gsub(",", ".", Finalna_Baza$Przychody))
+
+```
+
+-   **`gsub(",", ".", Finalna_Baza$Przychody)`**: Zamieniam przecinki na kropki w kolumnie `Przychody`, co jest konieczne, aby liczby były w formacie akceptowanym przez R (R używa kropek jako separatora dziesiętnego).
+
+-   **`as.numeric()`**: Konwertuję przekształcone wartości (już z kropkami zamiast przecinków) na typ liczbowy.
+
+```{r}
+Finalna_Baza$Koszty <- as.numeric(gsub(",", ".", Finalna_Baza$Koszty))
+
+```
+
+Robię to samo, co w przypadku kolumny `Przychody`, ale dla kolumny `Koszty`. Zamieniam przecinki na kropki, a następnie konwertuję wartości na liczby za pomocą funkcji `as.numeric()`.
+
+```{r}
+Finalna_Baza$Zysk <- as.numeric(gsub(",", ".", gsub("[^0-9,]", "", Finalna_Baza$Zysk)))*1000
+
+```
+
+-   **`gsub("[^0-9,]", "", Finalna_Baza$Zysk)`**: Najpierw usuwam wszystkie znaki inne niż cyfry (`0-9`) oraz przecinki (które zostaną później zamienione na kropki). To przydatne, gdy w wartościach znajdują się np. symbole walutowe lub inne niechciane znaki.
+
+-   **`gsub(",", ".", ...)`**: Następnie zamieniam przecinki na kropki w wynikowych wartościach.
+
+-   **`as.numeric()`**: Konwertuję przekształcone wartości na liczby.
+
+-   **`*1000`**: Na końcu mnożę wynik przez 1000. To oznacza, że wartości w kolumnie `Zysk` są prawdopodobnie zapisane w tysiącach (np. "5,5" może oznaczać 5500), dlatego mnożysz je przez 1000, aby uzyskać pełne liczby.
+
+Wszystkie te operacje można wykonać także w alernatywnych sposób używając biblioteki dplyr.
+
+```{r}
+library(dplyr)
+# %>%  oznacza ze kolejne funckje będa wykonywane jedna po drugiej
+Finalna_Baza <- Finalna_Baza %>%
+  mutate(
+    Przychody = na_if(Przychody, "error"),
+    Koszty = na_if(Koszty, "error"),
+    Zysk = na_if(Zysk, "error"),
+    
+    Przychody = as.numeric(gsub(",", ".",  Przychody)),
+    Koszty = as.numeric(gsub(",", ".",  Koszty)),
+    Zysk1 = as.numeric(gsub(",", ".", gsub("[^0-9,]", "", Zysk))) * 1000
+  )
+```
+
+## 7.Usuń zbedne bazy i wyczyść pamięć
+
+```{r}
+#Usuniecie niepotrzebnych baz danych
+rm(Nazwy, Regiony, Baza)
+# Czyszczenie pamięci
+gc()
+
+```
+
+## 8.Policz średnie przychody, koszty, zysk oraz liczbę firm dla każdego regionu.
+
+```{r}
+library(dplyr)                              #  poprawić !!!!!!!!!!!
+summary_stats <- Finalna_Baza %>%
+  group_by(Id_regionu) %>%
+  summarise(
+    Srednie_Przychody = mean(Przychody, na.rm = TRUE),
+    Srednie_Koszty = mean(Koszty, na.rm = TRUE),
+    Sredni_Zysk = mean(Zysk, na.rm = TRUE),
+    Liczba_Firm = n()
+  )
+```
