@@ -1,0 +1,315 @@
+---
+title: "Statystyka opisowa"
+output: html_document
+---
+
+## Statystyka opisowa
+
+Statystyka opisowa dostarcza narzędzi do analizy (badania własności, struktury) próby, ale bez uogólnień na całą populację. Niemniej jest kluczowa w pierwszym etapie analizy statystycznej, ponieważ dostarcza nam informacje, które pozwalają nam ocenić „na oko" jakich własności badanej cechy możemy się spodziewać (oraz oczywiście dlatego, że tych informacji używamy potem we wnioskowaniu statystycznym).
+
+Metody statystyki opisowej możemy podzielić na dwa rodzaje: miary (inaczej: statystyki, współczynniki) liczbowe, które charakteryzują próbę, oraz metody graficzne („wizualizacja" danych), to znaczy tworzenie rysunków, na podstawie których jesteśmy w stanie podać własności próby.
+
+## Podstawowe pojęcia
+
+**Zbiorowość statystyczna** (populacja generalna) jest to zbiór dowolnych elementów podobnych pod względem określonych właściwości i poddanych badaniu statystycznemu. Przykład: ludność Polski.
+
+**Próba statystyczna** -- podzbiór populacji generalnej. Przykład: ludność województwa mazowieckiego.
+
+**Jednostka statystyczna** -- to element (obiekt) zbiorowości statystycznej. Przykład: jedna osoba.
+
+**Cecha statystyczna** jest to właściwość obiektu tworzącego zbiorowość statystyczną.
+
+Cechy statystyczne dzielą się na: - **mierzalne (ilościowe)** -- podawane liczbowo, przykład: wiek, - **niemierzalne (jakościowe)** -- podawane opisowo, przykład: płeć.
+
+Cechy ilościowe można podzielić na: - **skokowe (dyskretne)** -- przyjmują wartości ze skończonych i przeliczalnych przedziałów liczbowych, ale bez wartości pośrednich, przykład: liczba gospodarstw domowych. - **ciągłe** -- przyjmują każdą wartość z określonego przedziału, przykład: wzrost.
+
+## Szereg statystyczny
+
+**Szereg statystyczny** jest to ciąg wariantów cechy uporządkowanych rosnąco lub malejąco, pogrupowany według określonych kryteriów. Szeregi dzielimy na:
+
+-   **wyliczające (szczegółowe)** -- uporządkowane rosnąco lub malejąco wartości cechy. Szeregi te są niewygodne w wykrywaniu prawidłowości statystycznych z uwagi na to, że na ogół są długie.
+-   **rozdzielcze (strukturalne)** -- zawierają ciągi wartości badanej cechy wraz z przypisanymi im liczebnościami.
+
+## 2.1 Miary liczbowe
+
+Miary liczbowe możemy podzielić na kilka kategorii (miary położenia, zmienności, skośności i koncentracji) w zależności od tego, jaką własność próby opisują.
+
+### 2.1.1 Miary położenia
+
+Miary położenia informują nas, gdzie na osi liczbowej „leży" próba.
+
+Miary położenia wskazują wokół jakich wartości skupia się rozkład analizowanych zmiennych. Dzieli się je na klasyczne i pozycyjne. Miary klasyczne to średnie: arytmetyczna, harmoniczna i geometryczna. Do miar pozycyjnych należy dominanta (modalna, wartość najczęstsza) oraz kwantyle. Wśród kwantyli najczęściej stosowane są: kwartyle (dzielące zbiorowość na cztery części pod względem liczebności), kwintyle (dzielące zbiorowość na pięć części), decyle (dzielące zbiorowość na dziesięć części) oraz percentyle (dzielące zbiorowość na sto części). Obydwie grupy średnich (klasyczne i pozycyjne) nie wykluczają się, ale nawzajem uzupełniają. Każda z nich opisuje bowiem poziom wartości cechy z innego punktu widzenia.
+
+![](images/miary%20polozenia.PNG)
+
+### Średnia arytmetyczna
+
+Zaczniemy od miar położenia centralnego, które wyznaczają „środek" („centrum") próbki. Najczęściej używanymi są średnia arytmetyczna oraz mediana.
+
+Niech $X = (X_1, \ldots, X_n)$ będzie próbą $n$-elementową. Wtedy
+
+$$
+\bar{X_n} = \bar{X} = \frac{1}{n} \sum_{i=1}^{n} X_i
+$$
+
+nazywamy średnią arytmetyczną z próby. Często mówi się po prostu średnia, ale z kontekstu powinno się rozróżnić, czy mówimy o średniej z próby, czy średniej dla całej populacji.
+
+W R tę średnią wyznaczamy następująco:
+
+```{r}
+X=c(1.2,1.5,0.3,3.44,4.55,1.34)
+mean(X)
+```
+
+Zdefiniujmy odchylenie $d_i$ i-ej obserwacji od średniej:
+
+$$
+d_i = X_i - \bar{X}.
+$$
+
+Wtedy łatwo udowodnić, że
+
+$$
+\sum_{i=1}^{n} (X_i - \bar{X}) = \sum_{i=1}^{n} d_i = 0.
+$$
+
+Powyższa własność ma ciekawą interpretację fizyczną. Mówi ona bowiem, że średnia arytmetyczna jest środkiem ciężkości (barycentrum) figury $\{X_1, \ldots, X_n\}$, zakładając, że każdy punkt $X_i$ ma taką samą masę.
+
+Średnia arytmetyczna jest chyba najczęściej stosowaną statystyką we wnioskowaniu statystycznym, niemniej posiada pewną wadę. Jest nią czułość na wartości odstające. Wartości odstające zostaną formalnie zdefiniowane później, niemniej intuicyjnie są to obserwacje, które są istotnie większe lub mniejsze od pozostałych, które stanowią większość. Czułość na wartości odstające oznacza, że jedna wartość różniąca się od pozostałych może mieć duży wpływ na wartość średniej.
+
+#### Przykład
+
+Dla przykładu załóżmy, że zapytaliśmy pięciu studentów, ile samochodów by chcieli posiadać i uzyskaliśmy odpowiedzi: 1, 0, 2, 2, 1000. Średnia wynosi $\frac{1005}{5} = 201$, ale trudno powiedzieć, że „średnio" w tej grupie student chce mieć 201 samochodów, jeśli większość z nich chce co najwyżej dwóch.
+
+Zwróćmy uwagę na inne aspekty użycia średniej arytmetycznej. Będziemy używać tę średnią wyliczoną dla obserwacji tej samej cechy (tak została zdefiniowana) mierzonej w skali co najmniej przedziałowej, więc w szczególności, jeśli na przykład obserwacje były w metrach, to średnia też jest w metrach. O ile widać, że liczenie średniej z próby dla cechy mierzonej w skali nominalnej nie ma sensu, to pozostaje pytanie, czy jest sens jej liczenia w skali porządkowej, na przykład w skali ocen w szkole od 1 do 6.
+
+W „życiu codziennym" spotykamy się też z sytuacją liczenia średniej arytmetycznej z obserwacji różnych cech, co z naszego punktu widzenia nie będzie interpretowywalne.
+
+### Mediana
+
+Drugą powszechnie stosowaną miarą położenia centralnego jest mediana. Niech $X = (X_1, \ldots, X_n)$ będzie już posortowaną próbą (to znaczy, że zachodzi $X_1 \leq \ldots \leq X_n$). Wtedy
+
+$$
+med(X) =
+\begin{cases} 
+\frac{x_k + x_{k+1}}{2}, & \text{jeśli } n = 2k \text{ dla pewnego } k \in \mathbb{N} \\ 
+x_k, & \text{jeśli } n = 2k - 1 \text{ dla pewnego } k \in \mathbb{N} 
+\end{cases}
+$$
+
+nazywamy medianą z próby. Widzimy więc, że mediana to liczba taka, że połowa obserwacji jest niewiększa od niej, a połowa obserwacji z próby jest od niej niemniejsza. W R obliczamy ją następująco:
+
+```{r}
+X = c(1.2, 1.5, 0.3, 3.44, 4.55, 1.34)
+median(X)
+```
+
+### Dominanta
+
+Dominanta (modalna, wartość najczęstsza) jest to najczęściej powtarzająca się wartość zmiennej w szeregu statystycznym. Określa ona najbardziej typową wartość zmiennej w badanej zbiorowości. Charakterystyczną cechą dominanty jest możliwość jej wyznaczenia zarówno z szeregów dotyczących cechy mierzalnej, jak i niemierzalnej. Wartość dominanty można ustalić jedynie dla rozkładów jednomodalnych. W szeregach wyliczających i rozdzielczych punktowych dominanta jest tą wartością cechy, której odpowiada największa liczebność.
+
+### Średnia odcięta
+
+Istnieją też modyfikacje średniej arytmetycznej w celu jej „uodpornienia" na wartości odstające. Najpopularniejsze to średnia obcięta i średnia winsorska (winsorowska). Średnia obcięta to średnia z próby po usunięciu z niej ustalonej części najmniejszych i największych obserwacji. W R możemy ją policzyć następująco:
+
+```{r}
+X = c(1.2, 1.5, 0.3, 3.44, 4.55, 1.34)
+mean(X, trim = 0.3)
+```
+
+(tu modą jest 2, która wystąpiła w próbie pięć razy).
+
+### Inne średnie
+
+#### Średnia harmoniczna
+
+**Średnia harmoniczna** jest odwrotnością średniej arytmetycznej z odwrotności wartości zmiennych. Z szeregów wyliczających średnią harmoniczną obliczamy ze wzoru:
+
+$$ 
+H = \frac{N}{\sum_{j=1}^{N} \frac{1}{x_j}} 
+$$
+
+gdzie: - $H$ jest symbolem średniej harmonicznej.
+
+Średnią harmoniczną stosuje się wówczas, gdy wartości zmiennej podane są w jednostkach względnych, a wagi -- w jednostkach względnych liczników. Przykładowo można tu wymienić takie zmienne, jak: - prędkość pojazdu (zmienna -- km/h, waga -- liczba kilometrów), - gęstość zaludnienia (zmienna -- mieszkańcy/km², waga -- liczba mieszkańców).
+
+W R wyznaczamy ją następująco:
+
+```{r}
+library(psych)
+x <- c(10, 20, 30, 40)
+
+# Obliczanie średniej harmonicznej
+H <- harmonic.mean(x)
+print(H)
+```
+
+#### Średnia geometryczna
+
+Średnia geometryczna jest pierwiastkiem k-tego stopnia z iloczynu k zmiennych, czyli dla szeregów wyliczających:
+
+$$
+G = \sqrt[k]{x_1 x_2 \ldots x_k} = \sqrt[k]{\prod_{i=1}^{k} x_i}
+$$
+
+gdzie: $\prod$ jest znakiem iloczynu określonej liczby wyrazów.
+
+Średnia geometryczna znajduje zastosowanie przy badaniu średniego tempa zmian zjawisk, których
+
+rozwój przedstawiony jest w postaci szeregów dynamicznych.
+
+## Kwantyle
+
+Najbardziej ogólną miarą położenia jest kwantyl. Kwantylem (z próby) rzędu 𝑝 16 nazywamy liczbę 𝑥 𝑝 taką, że co najmniej 𝑝×100% obserwacji z próby jest mniejsze lub równe 𝑥 𝑝 i co najmniej (1 − 𝑝) × 100% obserwacji jest większe lub równe 𝑥 𝑝. W R wyznaczamy je następująco
+
+```{r}
+X=c(1.2,1.5,0.3,3.44,4.55,1.34)
+quantile(X,p=c(0.1,0.5,0.8))
+```
+
+Najczęściej używanymi kwantylami są: − kwartyl dolny 𝑄1 oraz kwartyl górny 𝑄3, to jest kwantyle rzędu odpowiednio 0.25 oraz 0.75. Razem z medianą (czyli kwartylem rzędu 0.5) kwartyle dzielą próbę na cztery grupy kwartylowe; − decyle, to znaczy kwantyle rzędu 0.1, 0.2, . . . , 0.9; − percentyle, to jest kwantyle rzędu 0.01, 0.02, . . . , 0.99. W R funkcja summary dostarcza nam podstawowe statystyki pozycyjne z próby:
+
+```{r}
+X=c(1.2,1.5,0.3,3.44,4.55,1.34)
+ summary(X)
+```
+
+### 2.1.2 Miary zmienności
+
+Kolejną grupą statystyk są miary zmienności, które badają zmienność (zróżnicowanie) obserwacji (lub inaczej, badają jak bardzo skupione/rozproszone są obserwacje).
+
+Najprostszą miarą zmienności jest rozstęp:
+
+$$
+R = \max\{X_1, \ldots, X_n\} - \min\{X_1, \ldots, X_n\}.
+$$
+
+Wadą tej miary jest to, że zależy tylko od dwóch skrajnych obserwacji, więc nie informuje nas, co się dzieje „w środku" (i w szczególności jest bardzo czuła na wartości odstające).
+
+Inną miarą jest rozstęp międzykwartylowy:
+
+$$
+IQR = Q_3 - Q_1,
+$$
+
+czyli rozstęp 50% środkowych obserwacji (lub innymi słowy obserwacji z drugiej i trzeciej grupy kwartylowej). W R te statystyki możemy obliczyć następująco:
+
+```{r}
+X = c(1.2, 1.5, 0.3, 3.44, 4.55, 1.34) 
+diff(range(X)) # Rozstęp
+IQR(X)  # Rozstęp międzykwartylowy
+```
+
+definiujemy teraz dwie najczęściej używane miary dyspersji. Wariancją (z próby) \\(X_1, \\ldots, X_n\\) nazywamy:
+
+\\[ s\^2 = \\frac{1}{n} \\sum\_{i=1}\^{n} (X_i - \\bar{X})\^2. \\]
+
+a odchyleniem standardowym (z próby) $s$ jej pierwiastek:
+
+$$
+s = \sqrt{s^2}
+$$
+
+Wariancję definiuje się też jako
+
+$$
+s^2 = \frac{1}{n - 1} \sum_{i=1}^{n} (X_i - \bar{X})^2.
+$$
+
+Pierwszej definicji używa się na gruncie statystyki opisowej, a drugiej we wnioskowaniu statystycznym. W R wyznaczamy je następująco (funkcje te wyznaczają wariancję z drugiej definicji):
+
+```{r}
+X = c(1.2, 1.5, 0.3, 3.44, 4.55, 1.34) 
+var(X) # Wariancja
+sd(X)  # Odchylenie standardowe
+```
+
+Jak widać, wariancja to średni kwadrat odległości obserwacji od średniej. Łatwo też widać, że wariancja i odchylenie standardowe są nieujemne, równe zero tylko, gdy próba jest stała, a im rozproszenie większe, tym te statystyki są większe.
+
+Odchylenie standardowe jest chyba używane częściej, ponieważ jest wyrażone w tej samej jednostce co pomiary cechy, a wariancja w kwadracie tej jednostki. Co więcej, odchylenie standardowe lepiej zachowuje się przy zamianie skali (na przykład z centymetrów na metry). Wadą wariancji może być to, że obserwacje, które są położone daleko od średniej, mają większy wpływ na wartość tej statystyki, niż obserwacje leżące blisko średniej.
+
+W celu uniknięcia tego efektu rozważa się niekiedy odchylenie przeciętne:
+
+$$
+d = \frac{1}{n} \sum_{i=1}^{n} |X_i - \bar{X}|.
+$$
+
+Nie będziemy podawać ogólnych własności tych miar, ale można na przykład pokazać, że dla prób o liczności $n > 4$ zachodzi:
+
+$$
+0 \leq d \leq s \leq 0.6R,
+$$
+
+itd. Z praktycznego punktu widzenia bardziej istotnym problemem jest to, że odchylenia standardowego nie można bezpośrednio użyć do porównania dwóch prób i stwierdzenia, które obserwacje były bardziej różnorodne (w szczególności mogą mieć nawet różne jednostki pomiarowe).
+
+Dlatego definiuje się współczynnik zmienności $V$ wzorem (dla prób ze średnią dodatnią):
+
+$$
+V = \frac{s}{\bar{X}} \times 100\%,
+$$
+
+który już dla każdej próby wyrażony jest w procentach i można go użyć do porównywania zmienności dwóch prób.
+
+Jeśli $V > 100\%$, to mówimy, że próba ma dużą zmienność. Wadą tego współczynnika jest to, że dla średnich bliskich zera jest „niestabilny", to znaczy mała zmiana średniej powoduje dużą zmianę wartości tego współczynnika.
+
+### 2.1.3 Miary skośności
+
+Miary skośności (asymetrii) mają za zadanie określenie, jak bardzo próba jest skośna (to znaczy niesymetryczna). Przy czym powiemy, że próba jest symetryczna, jeśli zbiór $\{X_1, \ldots, X_n\}$ jako figura na osi liczbowej jest symetryczny.
+
+Rodzajów niesymetryczności jest wiele, najczęściej wyróżnia się próbę skośną prawostronnie (w prawo) (gdy skrajne prawe obserwacje rozciągają się w prawo bardziej niż lewe skrajne w lewo) oraz skośną lewostonnie (w lewo) (gdy jest odwrotnie niż w skośności prawostronnej).
+
+Pierwsza miara wykorzystuje fakt, że dla próby symetrycznej średnia arytmetyczna i mediana są równe (a dla próby jednomodalnej prawostronnie skośnej mediana jest mniejsza od średniej). Jest nim współczynnik skośności Pearsona dany wzorem:
+
+$$
+As_1 = \frac{3(\bar{X} - med(X))}{s}.
+$$
+
+Innym współczynnikiem jest kwartylowy współczynnik skośności:
+
+$$
+As_2 = \frac{(Q_3 - med(X)) - (med(X) - Q_1)}{Q_3 - Q_1} = \frac{Q_3 + Q_1 - 2 \cdot med(X)}{Q_3 - Q_1},
+$$
+
+który bada, jak bardzo kwartyle są niesymetryczne względem mediany (dla próby symetrycznej oczywiście kwartyle są symetryczne względem mediany i wartość tego współczynnika wynosi zero).
+
+Jeszcze innym jest współczynnik skośności:
+
+$$
+As_3 = \frac{1}{n} \sum_{i=1}^{n} \frac{(X_i - \bar{X})^3}{s^3}.
+$$
+
+Inaczej mówiąc, jest to standaryzowany trzeci moment centralny z próby. W R możemy je policzyć na przykład tak:
+
+```{r}
+X = c(1.2, 1.5, 0.3, 3.44, 4.55, 1.34) 
+3 * (mean(X) - median(X)) / sd(X)
+(mean((X - mean(X))^3)) / (sd(X)^3)
+```
+
+Wszystkie te współczynniki przyjmują wartość zero dla prób symetrycznych i wartości dodatnie (ujemne) dla prób jednomodalnych skośnych w prawo (w lewo).
+
+Zakończymy ten podrozdział uwagą, że współczynniki te są liczbą (bez jednostki), a przy afinicznej zmianie skali ich wartość się nie zmienia (po to istnieją mianowniki w powyższych zbiorach).
+
+### 2.1.4 Miary koncentracji
+
+Najczęściej stosowaną miarą koncentracji (skupienia) wokół średniej jest kurtoza dana wzorem:
+
+$$
+\kappa = \frac{1}{n} \sum_{i=1}^{n} \frac{(X_i - \bar{X})^4}{s^4} - 3.
+$$
+
+Dla prób pochodzących z rozkładu normalnego wartość kurtozy wynosi około zero (próba o kurtozie bliskiej zero nazywana jest mezokurtyczną). Duża kurtoza świadczy o „ogonach" „grubszych" niż w rozkładzie normalnym (takie próby nazywamy platokurtycznymi), a ujemna o „cieńszych" (takie próby nazywamy leptokurtycznymi). W R mamy:
+
+```{r}
+X = c(1.2, 1.5, 0.3, 3.44, 4.55, 1.34) 
+(mean((X - mean(X))^4)) / (sd(X)^4)
+```
+
+# Statystyki opisowe na przykładowym zbiorze danych
+
+Policz znane ci statystyki opisowe  na zbiorze danych 'airquality'
+
+```{r}
+
+data( airquality)
+```
