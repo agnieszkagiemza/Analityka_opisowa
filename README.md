@@ -12,12 +12,3 @@ Zajęcia w dniach :
 
 nie odbędą się w w.w. terminie i będą musiały być odrobione.
 
-Sprawy organizacyjne prowadzący Jarosław Napora:
-
-Zajęcia w dniach :
-
--16.10.2024 środa -
-
--30.10.2024 środa
-
-nie odbędą się w w.w. terminie i będą musiały być odrobione.
