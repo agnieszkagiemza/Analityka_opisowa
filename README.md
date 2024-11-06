@@ -8,7 +8,7 @@ Zajęcia w dniach :
 
 -23.10.2024 środa i 30.10.2024 środa - obrabiamy (poniedziałek 21.10. o godz 15:45- 2 zajęcia pod rząd) 
 
--13.11.2024 środa   - odrabiamy czwartek 24.10.2024 o godz 19
+-13.11.2024 środa   - odrabiamy czwartek 24.10.2024 o godz 14
 
 nie odbędą się w w.w. terminie i będą musiały być odrobione.
 
